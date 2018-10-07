@@ -1,0 +1,12 @@
+[submodule "extern/abseil-cpp"]
+	path = extern/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp
+[submodule "extern/skarupke/flat_hash_map"]
+	path = extern/skarupke/flat_hash_map
+	url = https://github.com/skarupke/flat_hash_map
+[submodule "extern/hopscotch-map"]
+	path = extern/hopscotch-map
+	url = https://github.com/tessil/hopscotch-map
+[submodule "extern/robin-map"]
+	path = extern/robin-map
+	url = https://github.com/tessil/robin-map
