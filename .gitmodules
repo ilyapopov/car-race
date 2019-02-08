@@ -10,3 +10,6 @@
 [submodule "extern/robin-map"]
 	path = extern/robin-map
 	url = https://github.com/tessil/robin-map
+[submodule "extern/robin-hood-hashing"]
+	path = extern/robin-hood-hashing
+	url = https://github.com/martinus/robin-hood-hashing
