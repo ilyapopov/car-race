@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(car-race CXX)
 
 option(BUILD_TESTING OFF)
+set(ABSL_PROPAGATE_CXX_STD ON)
 add_subdirectory(extern/abseil-cpp)
 
 add_executable(cars cars.cpp)
