@@ -1,15 +1,18 @@
 [submodule "extern/abseil-cpp"]
 	path = extern/abseil-cpp
-	url = https://github.com/abseil/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
 [submodule "extern/skarupke/flat_hash_map"]
 	path = extern/skarupke/flat_hash_map
-	url = https://github.com/skarupke/flat_hash_map
+	url = https://github.com/skarupke/flat_hash_map.git
 [submodule "extern/hopscotch-map"]
 	path = extern/hopscotch-map
-	url = https://github.com/tessil/hopscotch-map
+	url = https://github.com/tessil/hopscotch-map.git
 [submodule "extern/robin-map"]
 	path = extern/robin-map
-	url = https://github.com/tessil/robin-map
+	url = https://github.com/tessil/robin-map.git
 [submodule "extern/robin-hood-hashing"]
 	path = extern/robin-hood-hashing
-	url = https://github.com/martinus/robin-hood-hashing
+	url = https://github.com/martinus/robin-hood-hashing.git
+[submodule "extern/martinus/unordered_dense"]
+	path = extern/martinus/unordered_dense
+	url = https://github.com/martinus/unordered_dense.git

@@ -104,8 +104,8 @@ std::vector<CarState> find_path_bfs(const Racetrack & map, const CarState & star
 {
     //std::map<CarState, CarState> prev;
     //std::unordered_map<CarState, CarState, absl::Hash<CarState>> prev;
-    absl::flat_hash_map<CarState, CarState> prev;
-    //tsl::robin_map<CarState, CarState, absl::Hash<CarState>> prev;
+    //absl::flat_hash_map<CarState, CarState> prev;
+    tsl::robin_map<CarState, CarState, absl::Hash<CarState>> prev;
     //tsl::hopscotch_map<CarState, CarState, absl::Hash<CarState>> prev;
     //ska::bytell_hash_map<CarState, CarState, absl::Hash<CarState>> prev;
     //ska::flat_hash_map<CarState, CarState, absl::Hash<CarState>> prev;
