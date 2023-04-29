@@ -27,16 +27,6 @@ const int inf = std::numeric_limits<int>::max();
 
 struct CarState
 {
-    CarState()
-        : x(-1), y(-1), vx(0), vy(0)
-    {}
-    CarState(int x_, int y_)
-        : x(x_), y(y_), vx(0), vy(0)
-    {}
-    CarState(int x_, int y_, int vx_, int vy_)
-        : x(x_), y(y_), vx(vx_), vy(vy_)
-    {}
-
     bool operator == (const CarState & other) const
     {
         return x == other.x && y == other.y
@@ -54,9 +44,17 @@ struct CarState
         return H::combine(std::move(h), st.x, st.y, st.vx, st.vy);
     }
 
-    int16_t x, y;
-    int8_t vx, vy;
+    int16_t x = -1, y = -1;
+    int8_t vx = 0, vy = 0;
 };
+
+static_assert(sizeof(CarState) == 6);
+//static_assert(std::is_trivial_v<CarState>);
+static_assert(std::is_trivially_copy_constructible_v<CarState>);
+static_assert(std::is_trivially_copy_assignable_v<CarState>);
+static_assert(std::is_trivially_move_constructible_v<CarState>);
+static_assert(std::is_trivially_move_assignable_v<CarState>);
+static_assert(std::is_trivially_destructible_v<CarState>);
 
 template<typename Mapping, typename State, typename Callable>
 std::vector<State> trace_back(const Mapping & prev, State state, Callable && getter)
@@ -94,7 +92,7 @@ void for_possible_moves(const Racetrack & map, const State & state, Callback && 
                                   [&map](int x, int y){return map(x, y) != Racetrack::cell_t::outside;})
                     )
             {
-                callback(CarState(x, y, nvx, nvy));
+                callback(CarState{(int16_t)x, (int16_t)y, (int8_t)nvx, (int8_t)nvy});
             }
         }
     }
@@ -111,38 +109,41 @@ std::vector<CarState> find_path_bfs(const Racetrack & map, const CarState & star
     //ska::flat_hash_map<CarState, CarState, absl::Hash<CarState>> prev;
     //robin_hood::unordered_map<CarState, CarState, absl::Hash<CarState>> prev;
 
-    std::queue<CarState> q;
+    std::vector<CarState> q;
+    std::vector<CarState> q_next;
 
-    prev.insert({start, CarState(-1, -1)});
-    q.push(start);
+    prev.insert({start, CarState{-1, -1, 0, 0}});
+    q.push_back(start);
 
     size_t count = 0;
     size_t lookups = 0;
 
     while (!q.empty())
     {
-        auto state = q.front();
-        q.pop();
-        ++count;
-
-        if (map(state.x, state.y) == Racetrack::cell_t::finish)
-        {
-            std::cout << "BFS: states processed: " << count << '\n'
-                      << "     total added:      " << prev.size() << '\n'
-                      << "     lookups:          " << lookups
-                      << std::endl;
-
-            return trace_back(prev, state, [](const CarState & st){return st;});
-        }
-
-        for_possible_moves(map, state, [&](const CarState & newstate)
-        {
-            ++lookups;
-            if (prev.insert({newstate, state}).second)
+        q_next.clear();
+        for (const auto& state: q) {
+            ++count;
+            if (map(state.x, state.y) == Racetrack::cell_t::finish) [[unlikely]]
             {
-                q.push(newstate);
+                std::cout << "BFS: states processed: " << count << '\n'
+                          << "     total added:      " << prev.size() << '\n'
+                          << "     lookups:          " << lookups << '\n'
+                          << "     queue sizes:      " << q.size() << ' ' << q_next.size() << '\n'
+                          << "     queue capacities: " << q.capacity() << ' ' << q_next.capacity()
+                          << std::endl;
+
+                return trace_back(prev, state, [](const CarState & st){return st;});
             }
-        });
+            for_possible_moves(map, state, [&](const CarState & newstate)
+                               {
+                                   ++lookups;
+                                   if (prev.insert({newstate, state}).second)
+                                   {
+                                       q_next.push_back(newstate);
+                                   }
+                               });
+        }
+        q.swap(q_next);
     }
     return {};
 }
@@ -171,7 +172,7 @@ int main(int argc, char * argv[])
     std::cout << "Finding the path ..." << std::endl;
 
     auto start = std::chrono::steady_clock::now();
-    auto path = find_path_bfs(map, CarState(0, 0));
+    auto path = find_path_bfs(map, CarState{0, 0, 0, 0});
 
     std::chrono::duration<double> elapsed =
             std::chrono::steady_clock::now() - start;
