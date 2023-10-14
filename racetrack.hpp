@@ -1,6 +1,7 @@
 #ifndef RACETRACK_HPP
 #define RACETRACK_HPP
 
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <vector>
